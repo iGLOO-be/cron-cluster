@@ -1,4 +1,4 @@
-# Cron-cluster
+# Cron-cluster [![Build Status](https://travis-ci.org/iGLOO-be/cron-cluster.svg?branch=master)](https://travis-ci.org/iGLOO-be/cron-cluster)
 Ensure that a cron is launched only for a node app when it was clustered
 
 ## Install
