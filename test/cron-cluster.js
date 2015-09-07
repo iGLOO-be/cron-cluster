@@ -90,3 +90,50 @@ test('Should execute 1 job and give the leader to another node', function (t) {
     }, 2500)
   })
 })
+
+test('Should execute multiple job only once', function (t) {
+  t.plan(4)
+
+  var client = redis.createClient()
+
+  removeLeaderKeys(client, function (err) {
+    if (err) throw err
+
+    client.unref()
+
+    var CronJob1 = CronCluster(client).CronJob
+    var CronJob2 = CronCluster(client).CronJob
+
+    var arrRes1 = []
+    var arrRes2 = []
+
+    var job1 = new CronJob1('* * * * * *', function () {
+      arrRes1.push('job1')
+    })
+    var job2 = new CronJob1('* * * * * *', function () {
+      arrRes1.push('job2')
+    })
+    var job3 = new CronJob2('* * * * * *', function () {
+      arrRes2.push('job1')
+    })
+    var job4 = new CronJob2('* * * * * *', function () {
+      arrRes2.push('job2')
+    })
+
+    job1.start()
+    job2.start()
+    job3.start()
+    job4.start()
+
+    setTimeout(function () {
+      job1.stop()
+      job2.stop()
+      job3.stop()
+      job4.stop()
+      t.equal(arrRes1.length, 2)
+      t.equal(arrRes2.length, 0)
+      t.equal(arrRes1[0], 'job1')
+      t.equal(arrRes1[1], 'job2')
+    }, 1500)
+  })
+})
