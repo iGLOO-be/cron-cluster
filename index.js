@@ -1,1 +1,1 @@
-require('./lib/cron-cluster')
+module.exports = require('./lib/cron-cluster')

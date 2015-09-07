@@ -1,13 +1,14 @@
 {
   "name": "cron-cluster",
   "version": "0.0.1",
-  "description": "A Cluster plugin for cron using redis",
+  "description": "A Cluster version of node-cron using redis",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "tap test/*.js | faucet"
+    "test": "standard {lib,test}/*.js && tape test/*.js | faucet",
+    "watch-test": "onchange 'lib/*.js' 'test/*.js' -- npm test"
   },
   "author": "Andy Vanbutsele <andy.vanbutsele@gmail.com>",
   "license": "ISC",
@@ -17,7 +18,11 @@
     "redis-leader": "^0.1.0"
   },
   "devDependencies": {
+    "async": "^1.4.2",
     "faucet": "0.0.1",
-    "tap": "^1.4.0"
+    "onchange": "^2.0.0",
+    "redis": "^1.0.0",
+    "standard": "^5.2.1",
+    "tape": "^4.2.0"
   }
 }

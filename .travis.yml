@@ -1,3 +1,8 @@
 language: nodejs
 nodejs:
+  - 0.10
+  - 0.12
+  - iojs-v1
+  - iojs-v2
+  - iojs-v3
   - iojs
