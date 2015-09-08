@@ -15,6 +15,8 @@ var removeLeaderKeys = function (client, done) {
   })
 }
 
+function wait (ms, fn) { setTimeout(fn, ms) }
+
 test('Should execute only 1 CronJob', function (t) {
   t.plan(2)
 
@@ -44,14 +46,14 @@ test('Should execute only 1 CronJob', function (t) {
     job1.start()
     job2.start()
     job3.start()
-
-    setTimeout(function () {
+    wait(1500, function () {
       job1.stop()
       job2.stop()
       job3.stop()
-      t.equal(arrResults.length, 1)
-      t.equal(arrResults[0], 'job1')
-    }, 1500)
+
+      t.equal(arrResults.length, 1, 'Array length must be 1')
+      t.equal(arrResults[0], 'job1', 'First must be job1')
+    })
   })
 })
 
@@ -71,23 +73,29 @@ test('Should execute 1 job and give the leader to another node', function (t) {
     var arrResults = []
 
     var job1 = new CronJob1('* * * * * *', function () {
+      console.log('in job1')
       arrResults.push('job1')
-      job1.stop()
     })
     var job2 = new CronJob2('* * * * * *', function () {
+      console.log('in job2')
       arrResults.push('job2')
     })
 
     job1.start()
-    job2.start()
-
-    setTimeout(function () {
+    wait(1500, function () {
       job1.stop()
-      job2.stop()
-      t.equal(arrResults.length, 2)
-      t.equal(arrResults[0], 'job1')
-      t.equal(arrResults[1], 'job2')
-    }, 2500)
+      wait(1500, function () {
+        job2.start()
+        wait(1500, function () {
+          job2.stop()
+          wait(500, function () {
+            t.equal(arrResults.length, 2, 'Array length should be 2')
+            t.equal(arrResults[0], 'job1', 'First must be job1')
+            t.equal(arrResults[1], 'job2', 'Second must be job2')
+          })
+        })
+      })
+    })
   })
 })
 
@@ -124,16 +132,17 @@ test('Should execute multiple job only once', function (t) {
     job2.start()
     job3.start()
     job4.start()
-
-    setTimeout(function () {
+    wait(1500, function () {
       job1.stop()
       job2.stop()
       job3.stop()
       job4.stop()
-      t.equal(arrRes1.length, 2)
-      t.equal(arrRes2.length, 0)
-      t.equal(arrRes1[0], 'job1')
-      t.equal(arrRes1[1], 'job2')
-    }, 1500)
+      wait(500, function () {
+        t.equal(arrRes1.length, 2, 'Array1 must have 2 elements')
+        t.equal(arrRes2.length, 0, 'Array2 must be empty')
+        t.equal(arrRes1[0], 'job1', 'First elem of Array1 must be job1')
+        t.equal(arrRes1[1], 'job2', 'Second elem of Array1 must be job2')
+      })
+    })
   })
 })
