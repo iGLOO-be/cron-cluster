@@ -73,11 +73,9 @@ test('Should execute 1 job and give the leader to another node', function (t) {
     var arrResults = []
 
     var job1 = new CronJob1('* * * * * *', function () {
-      console.log('in job1')
       arrResults.push('job1')
     })
     var job2 = new CronJob2('* * * * * *', function () {
-      console.log('in job2')
       arrResults.push('job2')
     })
 
@@ -130,18 +128,20 @@ test('Should execute multiple job only once', function (t) {
 
     job1.start()
     job2.start()
-    job3.start()
-    job4.start()
-    wait(1500, function () {
-      job1.stop()
-      job2.stop()
-      job3.stop()
-      job4.stop()
-      wait(500, function () {
-        t.equal(arrRes1.length, 2, 'Array1 must have 2 elements')
-        t.equal(arrRes2.length, 0, 'Array2 must be empty')
-        t.equal(arrRes1[0], 'job1', 'First elem of Array1 must be job1')
-        t.equal(arrRes1[1], 'job2', 'Second elem of Array1 must be job2')
+    wait(100, function () {
+      job3.start()
+      job4.start()
+      wait(1400, function () {
+        job1.stop()
+        job2.stop()
+        job3.stop()
+        job4.stop()
+        wait(1500, function () {
+          t.equal(arrRes1.length, 2, 'Array1 must have 2 elements')
+          t.equal(arrRes2.length, 0, 'Array2 must be empty')
+          t.equal(arrRes1.indexOf('job1') >= 0, true, 'Array must contain job1')
+          t.equal(arrRes1.indexOf('job2') >= 0, true, 'Array must contain job2')
+        })
       })
     })
   })
