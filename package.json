@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "A Cluster version of node-cron using redis",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iGLOO-be/cron-cluster.git"
+  },
   "directories": {
     "test": "test"
   },
@@ -12,6 +16,11 @@
   },
   "author": "Andy Vanbutsele <andy.vanbutsele@gmail.com>",
   "license": "ISC",
+  "keywords": [
+    "cron",
+    "cluster",
+    "redis"
+  ],
   "dependencies": {
     "cron": "^1.0.9",
     "debug": "^2.2.0",
