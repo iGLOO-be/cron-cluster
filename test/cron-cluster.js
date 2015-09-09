@@ -180,3 +180,103 @@ test('Should not remove leader for other Cron when a CronJob is stopped', functi
     })
   })
 })
+
+test('Should not fail with a non running job', function (t) {
+  t.plan(1)
+
+  var client = redis.createClient()
+
+  removeLeaderKeys(client, function (err) {
+    if (err) throw err
+
+    client.unref()
+
+    var CronJob = CronCluster(client).CronJob
+
+    var arrRes = []
+
+    var job1 = new CronJob('* * * * * *', function () {
+      arrRes.push('job1')
+    })
+    var job2 = new CronJob('* * * * * *', function () {
+      arrRes.push('job2')
+    })
+    // job1.start()
+    job2.start()
+    console.log(job1)
+    wait(1200, function () {
+      // job1.stop()
+      wait(1200, function () {
+        job2.stop()
+        wait(1500, function () {
+          t.equal(arrRes.length, 2, 'Array must have 2 elements')
+        })
+      })
+    })
+  })
+})
+
+test('Should not fail if stop called on a non running job', function (t) {
+  t.plan(1)
+
+  var client = redis.createClient()
+
+  removeLeaderKeys(client, function (err) {
+    if (err) throw err
+
+    client.unref()
+
+    var CronJob = CronCluster(client).CronJob
+
+    var arrRes = []
+
+    var job1 = new CronJob('* * * * * *', function () {
+      arrRes.push('job1')
+    })
+    var job2 = new CronJob('* * * * * *', function () {
+      arrRes.push('job2')
+    })
+    job2.start()
+    job1.stop()
+    wait(1200, function () {
+      wait(1200, function () {
+        job2.stop()
+        wait(1500, function () {
+          t.equal(arrRes.length, 2, 'Array must have 2 elements')
+        })
+      })
+    })
+  })
+})
+
+test('Should run job with CronJob base options', function (t) {
+  t.plan(1)
+
+  var client = redis.createClient()
+
+  removeLeaderKeys(client, function (err) {
+    if (err) throw err
+
+    client.unref()
+
+    var CronJob = CronCluster(client).CronJob
+
+    var arrRes = []
+
+    var job1 = new CronJob('* * * * * *', function () {
+      arrRes.push('job1')
+    }, null, false)
+    var job2 = new CronJob('* * * * * *', function () {
+      arrRes.push('job2')
+    }, null, true)
+    job1.stop()
+    wait(1200, function () {
+      wait(1200, function () {
+        job2.stop()
+        wait(1500, function () {
+          t.equal(arrRes.length, 2, 'Array must have 2 elements')
+        })
+      })
+    })
+  })
+})
