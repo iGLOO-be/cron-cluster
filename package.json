@@ -1,6 +1,6 @@
 {
   "name": "cron-cluster",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A Cluster version of node-cron using redis",
   "main": "index.js",
   "repository": {
