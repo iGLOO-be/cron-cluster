@@ -48,7 +48,7 @@ new CronJob('* * * * * *', function () {
   queue.create('log', {
     text: 'this is a log'
   }).save()
-})
+}, null, true)
 
 queue.process('log', function (job, done) {
   console.log(job.data.text)
