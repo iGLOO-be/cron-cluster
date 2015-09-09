@@ -201,11 +201,9 @@ test('Should not fail with a non running job', function (t) {
     var job2 = new CronJob('* * * * * *', function () {
       arrRes.push('job2')
     })
-    // job1.start()
     job2.start()
     console.log(job1)
     wait(1200, function () {
-      // job1.stop()
       wait(1200, function () {
         job2.stop()
         wait(1500, function () {
@@ -275,6 +273,39 @@ test('Should run job with CronJob base options', function (t) {
         job2.stop()
         wait(1500, function () {
           t.equal(arrRes.length, 2, 'Array must have 2 elements')
+        })
+      })
+    })
+  })
+})
+
+test('Should not fail when a job is stopped and restarted', function (t) {
+  t.plan(1)
+
+  var client = redis.createClient()
+
+  removeLeaderKeys(client, function (err) {
+    if (err) throw err
+
+    client.unref()
+
+    var CronJob = CronCluster(client).CronJob
+
+    var arrRes = []
+
+    var job1 = new CronJob('* * * * * *', function () {
+      arrRes.push('job1')
+    })
+    job1.start()
+    wait(1200, function () {
+      job1.stop()
+      wait(1200, function () {
+        job1.start()
+        wait(1500, function () {
+          job1.stop()
+          wait(500, function () {
+            t.equal(arrRes.length, 2, 'Array must have 2 elements')
+          })
         })
       })
     })
