@@ -15,7 +15,9 @@ var removeLeaderKeys = function (client, done) {
   })
 }
 
-function wait (ms, fn) { setTimeout(fn, ms) }
+function wait (ms, fn) {
+  setTimeout(fn, ms)
+}
 
 test('Should execute only 1 CronJob', function (t) {
   t.plan(2)
@@ -33,14 +35,23 @@ test('Should execute only 1 CronJob', function (t) {
 
     var arrResults = []
 
-    var job1 = new CronJob1('* * * * * *', function () {
-      arrResults.push('job1')
+    var job1 = new CronJob1({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrResults.push('job1')
+      }
     })
-    var job2 = new CronJob2('* * * * * *', function () {
-      arrResults.push('job2')
+    var job2 = new CronJob2({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrResults.push('job2')
+      }
     })
-    var job3 = new CronJob3('* * * * * *', function () {
-      arrResults.push('job3')
+    var job3 = new CronJob3({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrResults.push('job3')
+      }
     })
 
     job1.start()
@@ -72,11 +83,17 @@ test('Should execute 1 job and give the leader to another node', function (t) {
 
     var arrResults = []
 
-    var job1 = new CronJob1('* * * * * *', function () {
-      arrResults.push('job1')
+    var job1 = new CronJob1({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrResults.push('job1')
+      }
     })
-    var job2 = new CronJob2('* * * * * *', function () {
-      arrResults.push('job2')
+    var job2 = new CronJob2({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrResults.push('job2')
+      }
     })
 
     job1.start()
@@ -113,17 +130,29 @@ test('Should execute multiple job only once', function (t) {
     var arrRes1 = []
     var arrRes2 = []
 
-    var job1 = new CronJob1('* * * * * *', function () {
-      arrRes1.push('job1')
+    var job1 = new CronJob1({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes1.push('job1')
+      }
     })
-    var job2 = new CronJob1('* * * * * *', function () {
-      arrRes1.push('job2')
+    var job2 = new CronJob1({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes1.push('job2')
+      }
     })
-    var job3 = new CronJob2('* * * * * *', function () {
-      arrRes2.push('job1')
+    var job3 = new CronJob2({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes2.push('job1')
+      }
     })
-    var job4 = new CronJob2('* * * * * *', function () {
-      arrRes2.push('job2')
+    var job4 = new CronJob2({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes2.push('job2')
+      }
     })
 
     job1.start()
@@ -161,11 +190,17 @@ test('Should not remove leader for other Cron when a CronJob is stopped', functi
 
     var arrRes = []
 
-    var job1 = new CronJob('* * * * * *', function () {
-      arrRes.push('job1')
+    var job1 = new CronJob({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes.push('job1')
+      }
     })
-    var job2 = new CronJob('* * * * * *', function () {
-      arrRes.push('job2')
+    var job2 = new CronJob({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes.push('job2')
+      }
     })
     job1.start()
     job2.start()
@@ -195,11 +230,17 @@ test('Should not fail with a non running job', function (t) {
 
     var arrRes = []
 
-    var job1 = new CronJob('* * * * * *', function () {
-      arrRes.push('job1')
+    var job1 = new CronJob({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes.push('job1')
+      }
     })
-    var job2 = new CronJob('* * * * * *', function () {
-      arrRes.push('job2')
+    var job2 = new CronJob({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes.push('job2')
+      }
     })
     job2.start()
     wait(1200, function () {
@@ -227,11 +268,17 @@ test('Should not fail if stop called on a non running job', function (t) {
 
     var arrRes = []
 
-    var job1 = new CronJob('* * * * * *', function () {
-      arrRes.push('job1')
+    var job1 = new CronJob({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes.push('job1')
+      }
     })
-    var job2 = new CronJob('* * * * * *', function () {
-      arrRes.push('job2')
+    var job2 = new CronJob({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes.push('job2')
+      }
     })
     job2.start()
     job1.stop()
@@ -258,16 +305,22 @@ test('Should run job with CronJob base options', function (t) {
 
     var arrRes = []
 
-    var job1 = new CronJob('* * * * * *', function () {
-      arrRes.push('job1')
-    }, null, false)
-    var job2 = new CronJob('* * * * * *', function () {
-      arrRes.push('job2')
-    }, null, true)
+    var job1 = new CronJob({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes.push('job1')
+      }
+    }, null, null, false)
+    var job2 = new CronJob({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes.push('job2')
+      }
+    }, null, null, true)
     job1.stop()
-    wait(1200, function () {
+    wait(2000, function () {
       job2.stop()
-      wait(1500, function () {
+      wait(2500, function () {
         t.equal(arrRes.length, 1, 'Array must have 1 elements')
       })
     })
@@ -288,8 +341,11 @@ test('Should not fail when a job is stopped and restarted', function (t) {
 
     var arrRes = []
 
-    var job1 = new CronJob('* * * * * *', function () {
-      arrRes.push('job1')
+    var job1 = new CronJob({
+      cronTime: '* * * * * *',
+      onTick: function () {
+        arrRes.push('job1')
+      }
     })
     job1.start()
     wait(1200, function () {
