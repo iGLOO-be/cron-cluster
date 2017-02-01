@@ -1,5 +1,28 @@
 # Cron-cluster
-[![Build Status](https://travis-ci.org/iGLOO-be/cron-cluster.svg?branch=master)](https://travis-ci.org/iGLOO-be/cron-cluster)
+
+## Why do we have fork?
+
+In original version is incompatibility with cron module [https://www.npmjs.com/package/cron](https://www.npmjs.com/package/cron)
+The bug is only when you're using object as first parameter of CronJob instance - this will create instance without synchronization with other nods in cluster.
+ 
+I fixed this bug and now is possible to initialize CronJob with object parameter properly and it runs only once on all instances.
+Cron-cluster is init really compatible with original cron. More in test/cron-cluster-compatibility-check.js
+
+```js
+var redis = require('redis').createClient()
+var CronJob = require('cron-cluster')(redis).CronJob
+
+function doCron () {
+  var job = new CronJob({
+    cronTime: '* * * * * *', 
+    onTick: function () {
+        // Do some stuff here
+    }
+  })
+  job.start()
+}
+```
+
 
 Cron cluster is designed to prevent a job which must be launched only once to be launched many times while
 an app is scaling accross a cluster with the same task scripts.
