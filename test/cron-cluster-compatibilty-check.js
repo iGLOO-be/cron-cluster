@@ -243,6 +243,7 @@ test('Should not fail with a non running job', function (t) {
       }
     })
     job2.start()
+    job1
     wait(1200, function () {
       wait(1200, function () {
         job2.stop()
@@ -318,9 +319,9 @@ test('Should run job with CronJob base options', function (t) {
       }
     }, null, null, true)
     job1.stop()
-    wait(2000, function () {
+    wait(1200, function () {
       job2.stop()
-      wait(2500, function () {
+      wait(1500, function () {
         t.equal(arrRes.length, 1, 'Array must have 1 elements')
       })
     })
