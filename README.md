@@ -1,12 +1,12 @@
 # Cron-cluster
 
-## Why do we have fork?
+## Why did we fork?
 
 In original version is incompatibility with cron module [https://www.npmjs.com/package/cron](https://www.npmjs.com/package/cron)
-The bug is only when you're using object as first parameter of CronJob instance - this will create instance without synchronization with other nods in cluster.
- 
-I fixed this bug and now is possible to initialize CronJob with object parameter properly and it runs only once on all instances.
-Cron-cluster is init really compatible with original cron. More in test/cron-cluster-compatibility-check.js
+There is a bug when you are using an object as first parameter of the CronJob instance - this will create an instance of our application which is not synchronized with the other ones in the cluster.
+
+It is possible to initialize CronJob with an object passed as parameter and run the job only once for all the instances.
+Cron-cluster is compatible with original cron. More in test/cron-cluster-compatibility-check.js
 
 ```js
 var redis = require('redis').createClient()
@@ -22,7 +22,6 @@ function doCron () {
   job.start()
 }
 ```
-
 
 Cron cluster is designed to prevent a job which must be launched only once to be launched many times while
 an app is scaling accross a cluster with the same task scripts.
