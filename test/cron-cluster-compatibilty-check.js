@@ -243,7 +243,7 @@ test('Should not fail with a non running job', function (t) {
       }
     })
     job2.start()
-    job1
+    console.log(job1)
     wait(1200, function () {
       wait(1200, function () {
         job2.stop()
