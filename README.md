@@ -32,6 +32,24 @@ function doCron () {
 }
 ```
 
+It is possible to initialize CronJob with an object passed as parameter and run the job only once for all the instances.
+Cron-cluster is compatible with original cron. More in test/cron-cluster-compatibility-check.js
+
+```js
+var redis = require('redis').createClient()
+var CronJob = require('cron-cluster')(redis).CronJob
+
+function doCron () {
+  var job = new CronJob({
+    cronTime: '* * * * * *', 
+    onTick: function () {
+        // Do some stuff here
+    }
+  })
+  job.start()
+}
+```
+
 All you need is to provide a redis client to the cron-cluster module.
 
 ## Example
