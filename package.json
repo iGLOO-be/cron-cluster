@@ -24,7 +24,7 @@
   "dependencies": {
     "cron": "^1.2.1",
     "debug": "^2.6.0",
-    "lodash.wrap": "^4.1.1",
+    "lodash": "^4.17.11",
     "redis-leader": "^0.1.0"
   },
   "devDependencies": {
